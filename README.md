@@ -1,3 +1,3 @@
 cpp-graph
 ===
-C++ implementation of various grahp algorithms.
+C++ implementation of graph algorithms.
