@@ -1,0 +1,10 @@
+#files to ignore
+**/bin/
+**/obj/
+*.swp
+*.swo
+*.DS_STORE
+*.DS_Store
+
+# Artifacts from TrueCrypt
+*._*
