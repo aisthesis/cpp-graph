@@ -1,7 +1,11 @@
 /**
- * hopcroftkarp.cpp
- * Implementation of Hopcroft-Karp algorithm for maximum
- * matching in a bipartite graph.
+ * maxmatch.cpp
+ * Find a maximum match in a bipartite graph.
+ * At each step, we look for an augmenting path. If found,
+ * we augment the matching. If not, we're done.
+ * Differs from Hopcroft-Karp in that we augment as soon
+ * as we find one augmenting path. We don't try to find all
+ * minimal augmenting paths.
  *
  * Copyright (c) 2014 Marshall Farrier
  * license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -20,16 +24,14 @@ MaxMatch::MaxMatch(const int *graph, const int &X_size,
     graph_ = new int[rows_ * cols_];
     match_by_X_ = new int[rows_];
     match_by_Y_ = new int[cols_];
-    visitedX_ = new int[rows_];
-    visitedY_ = new int[cols_];
+    childX_ = new int[rows_];
 
     set(graph);
     reset();
 }
 
 MaxMatch::~MaxMatch() {
-    delete[] visitedY_;
-    delete[] visitedX_;
+    delete[] childX_;
     delete[] match_by_Y_;
     delete[] match_by_X_;
     delete[] graph_;
@@ -37,7 +39,11 @@ MaxMatch::~MaxMatch() {
 
 // run the algorithm to get the matching
 void MaxMatch::init() {
-    // TODO
+    int start_index;
+
+    while ((start_index = dfs()) != -1) {
+        augment_match(start_index);
+    }
 }
 /**
  * get the column matched to a given row.
@@ -65,7 +71,7 @@ void MaxMatch::set(const int *graph) {
     for (int i = 0; i < len; ++i) {
         graph_[i] = graph[i] == 0 ? 0 : 1;
     }
-    reset_matches();
+    reset();
 }
 
 void MaxMatch::add_edge(const int &x, const int &y) {
@@ -83,7 +89,7 @@ bool MaxMatch::has_edge(const int &x, const int &y) {
 
 void MaxMatch::reset() {
     reset_matches();
-    reset_visited();
+    reset_childX();
 }
 
 void MaxMatch::reset_matches() {
@@ -91,7 +97,47 @@ void MaxMatch::reset_matches() {
     std::fill(match_by_Y_, match_by_Y_ + cols_, -1);
 }
 
-void MaxMatch::reset_visited() {
-    std::fill(visitedX_, visitedX_ + rows_, WHITE);
-    std::fill(visitedY_, visitedY_ + cols_, WHITE);
+void MaxMatch::reset_childX() {
+    std::fill(childX_, childX_ + rows_, -1);
+}
+
+int MaxMatch::dfs() {
+    reset_childX();
+    for (int i = 0; i < rows_; ++i) {
+        if (match_by_X_[i] == -1 && dfs_visit(i)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+bool MaxMatch::dfs_visit(const int &i) {
+    // vertex already visited
+    if (childX_[i] >= 0) { return false; }
+    for (int j = 0; j < cols_; ++j) {
+        // we're only looking for unmatched edges
+        if (graph_[index_.index(i, j)] == 0 || match_by_X_[i] == j) continue;
+        childX_[i] = j;
+        // j is unmatched, augmenting path found
+        if (match_by_Y_[j] == -1) return true; 
+        // j is matched, keep going
+        if (dfs_visit(match_by_Y_[j])) return true;
+    }
+    childX_[i] = -1;
+    return false;
+}
+
+void MaxMatch::augment_match(int i) {
+    int nextX;
+
+    while (i >= 0) {
+        match_by_X_[i] = childX_[i];
+        nextX = match_by_Y_[match_by_X_[i]];
+        match_by_Y_[match_by_X_[i]] = i;
+        i = nextX;
+    }
+}
+
+int MaxMatch::matches() const {
+    return std::count_if(match_by_X_, match_by_X_ + rows_, [](int x) { return x != -1; });
 }

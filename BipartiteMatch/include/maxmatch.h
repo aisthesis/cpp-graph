@@ -23,9 +23,7 @@ private:
     int *graph_,
         *match_by_X_,
         *match_by_Y_,
-        *visitedX_,
-        *visitedY_;
-    enum {BLACK, WHITE};
+        *childX_;
 public:
     MaxMatch(const int *, const int &, const int &);
     ~MaxMatch();
@@ -42,6 +40,10 @@ public:
      */
     int match_Y(const int &) const;
     /**
+     * return the number of matches found
+     */
+    int matches() const;
+    /**
      * reset the graph on which to find a matching.
      * presupposes the same number of rows and
      * columns.
@@ -57,6 +59,16 @@ public:
     void reset();
 private:
     void reset_matches();
-    void reset_visited();
+    void reset_childX();
+    /**
+     * Return the start of an augmenting path, if there
+     * is one. Otherwise, return -1.
+     */
+    int dfs();
+    /**
+     * recursive search starting at a given X vertex.
+     */
+    bool dfs_visit(const int &);
+    void augment_match(int);
 };
 #endif
