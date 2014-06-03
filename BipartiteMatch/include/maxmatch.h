@@ -1,7 +1,6 @@
 /**
- * hopcroftkarp.h
- * Implementation of Hopcroft-Karp algorithm for maximum
- * matching in a bipartite graph.
+ * maxmatch.h
+ * Maximum matching of a bipartite graph.
  *
  * Copyright (c) 2014 Marshall Farrier
  * license http://opensource.org/licenses/gpl-license.php GNU Public License
