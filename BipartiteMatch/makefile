@@ -36,7 +36,7 @@ $(ODIR)/$(PROG1).o: $(PROG1).cpp directories
 $(ODIR)/$(PROG1)_test.o: $(PROG1)_test.cpp directories
 	$(CC) $(CFLAGS) $(CPPFLAGSTEST) -c $< -o $@
 
-$(PROG2)_test: $(ODIR)/$(PROG2)_test.o $(ODIR)/$(PROG2).o $(LDIR)/index.o
+$(PROG2)_test: $(ODIR)/$(PROG2)_test.o $(ODIR)/$(PROG2).o $(ODIR)/$(PROG1).o $(LDIR)/index.o
 	$(CC) $(CFLAGS) $^ -o $(BDIR)/$@
 
 $(ODIR)/$(PROG2).o: $(PROG2).cpp directories
