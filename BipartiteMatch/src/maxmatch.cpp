@@ -74,16 +74,16 @@ void MaxMatch::set(const int *graph) {
     reset();
 }
 
-void MaxMatch::add_edge(const int &x, const int &y) {
+void MaxMatch::add_graph_edge(const int &x, const int &y) {
     graph_[index_.index(x, y)] = 1;
 }
 
-void MaxMatch::delete_edge(const int &x, const int &y) {
+void MaxMatch::delete_graph_edge(const int &x, const int &y) {
     graph_[index_.index(x, y)] = 0;
 
 }
 
-bool MaxMatch::has_edge(const int &x, const int &y) {
+bool MaxMatch::has_graph_edge(const int &x, const int &y) {
     return graph_[index_.index(x, y)] == 1;
 }
 
@@ -140,4 +140,12 @@ void MaxMatch::augment_match(int i) {
 
 int MaxMatch::matches() const {
     return std::count_if(match_by_X_, match_by_X_ + rows_, [](int x) { return x != -1; });
+}
+
+int MaxMatch::sizeX() const {
+    return rows_;
+}
+
+int MaxMatch::sizeY() const {
+    return cols_;
 }

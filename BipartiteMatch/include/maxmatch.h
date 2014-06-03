@@ -53,9 +53,11 @@ public:
     /**
      * Does not reset matchings to avoid unnecessary repetition
      */
-    void add_edge(const int &, const int &);
-    void delete_edge(const int &, const int &);
-    bool has_edge(const int &, const int &);
+    void add_graph_edge(const int &, const int &);
+    void delete_graph_edge(const int &, const int &);
+    bool has_graph_edge(const int &, const int &);
+    int sizeX() const;
+    int sizeY() const;
     void reset();
 private:
     void reset_matches();
