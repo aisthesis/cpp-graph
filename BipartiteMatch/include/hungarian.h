@@ -20,7 +20,7 @@
 #include "index.h"
 
 class Hungarian {
-    private:
+private:
     // the number of rows (or cols, since matrix is square)
     const int len_;
     const int len_sq_;
@@ -38,10 +38,16 @@ class Hungarian {
     int *equality_graph_;
     int *labelsX_;
     int *labelsY_;
+    // 1 for members of S, 0 for non-members
+    int *S_;
+    // 1 for members of T, 0 for non-members
+    int *T_;
+    // 1 for members of NlS, 0 for non-members
+    int *NlS_;
     Index index_;
     MaxMatch matcher_;
 
-    public:
+public:
     Hungarian(const int *weights, const int &len);
     ~Hungarian();
 
@@ -51,6 +57,17 @@ class Hungarian {
     int length() const;
     int weight(const int &, const int &) const;
     void init();
+
+private:
+    void improve_equality_graph();
+    int get_free_vertex() const;
+    void update_equality_graph();
+    int get_alpha() const;
+    // S_, T_, NlS_
+    void reset_path_sets();
+    void update_NlS(const int &);
+    int nls_minus_t() const;
+    void relabel();
 };
 
 #endif
