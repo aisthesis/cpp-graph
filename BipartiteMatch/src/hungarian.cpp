@@ -17,8 +17,6 @@
  */
 
 #include <algorithm>
-// TODO remove after debugging
-#include <iostream>
 
 #include "hungarian.h"
 #include "maxmatch.h"
@@ -28,7 +26,6 @@ Hungarian::Hungarian(const int *weights, const int &len) :
         len_(len), len_sq_(len_ * len_), index_(len_), matcher_(weights, len_, len_) {
     int i;
 
-    std::cout << "Initializing weights" << std::endl;
     // initialize weights
     weights_ = new int[len_sq_];
     for (i = 0; i < len_sq_; ++i) {
